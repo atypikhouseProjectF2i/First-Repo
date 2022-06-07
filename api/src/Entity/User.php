@@ -2,15 +2,40 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Action\NotFoundAction;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\MeController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource]
-class User
+#[ApiResource(
+    collectionOperations: [
+        'me' => [
+            'pagination_enabled' => false,
+            'path' => '/me',
+            'method' => 'get',
+            'controller' => MeController::class,
+            'read' => false,
+            'security' => 'is_granted("ROLE_USER")'
+        ]
+    ],
+    itemOperations: [
+        'get' => [
+            'controller' => NotFoundAction::class,
+            'openapi_context' => ['summary' => 'hidden'],
+            'read' => false,
+            'output' => false
+        ]
+    ],
+    normalizationContext: ['groups' => ['read:User']]
+)]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,21 +43,26 @@ class User
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['read:User'])]
     private $name;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['read:User'])]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['read:User'])]
     private $email;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['read:User'])]
     private $phone;
 
     #[ORM\Column(type: 'boolean')]
+    #[Groups(['read:User'])]
     private $newsletter;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Review::class)]
@@ -43,6 +73,9 @@ class User
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Booking::class)]
     private $bookings;
+
+    #[ORM\Column(type: 'json')]
+    private $roles = [];
 
     public function __construct()
     {
@@ -216,5 +249,44 @@ class User
         }
 
         return $this;
+    }
+
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 }
