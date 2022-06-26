@@ -15,22 +15,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
-    collectionOperations: [
-        'me' => [
-            'pagination_enabled' => false,
-            'path' => '/me',
-            'method' => 'get',
-            'controller' => MeController::class,
-            'read' => false,
-            'security' => 'is_granted("ROLE_USER")'
-        ]
-    ],
+    security: 'is_granted("ROLE_USER")',
+    collectionOperations: [],
     itemOperations: [
         'get' => [
             'controller' => NotFoundAction::class,
             'openapi_context' => ['summary' => 'hidden'],
             'read' => false,
             'output' => false
+        ],
+        'me' => [
+            'pagination_enabled' => false,
+            'path' => '/me',
+            'method' => 'get',
+            'controller' => MeController::class,
+            'read' => false,
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ]
         ]
     ],
     normalizationContext: ['groups' => ['read:User']]

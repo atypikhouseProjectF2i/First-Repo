@@ -25,6 +25,60 @@ class OpenApiFactory implements OpenApiFactoryInterface
             }
         }
 
+        $schemas = $openApi->getComponents()->getSecuritySchemes();
+        $schemas['bearerAuth'] = new \ArrayObject([
+            'type' => 'http',
+            'scheme' => 'bearer',
+            'bearer' => 'JWT'
+        ]);
+
+        $schemas = $openApi->getComponents()->getSchemas();
+        $schemas['Credentials'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'username' => [
+                    'type' => 'string',
+                    'example' => 'john@doe.fr',
+                ],
+                'password' => [
+                    'type' => 'string',
+                    'example' => '0000'
+                ]
+            ]
+        ]);
+
+        $meOperation = $openApi->getPaths()->getPath('/api/me')->getGet()->withParameters([]);
+        $mePathItem = $openApi->getPaths()->getPath('/api/me')->withGet($meOperation);
+        $openApi->getPaths()->addPath('/api/me', $mePathItem);
+
+        $pathItem = new PathItem(
+            post: new Operation(
+                operationId: 'postApiLogin',
+                tags: ['Auth'],
+                requestBody: new RequestBody(
+                    content: new \ArrayObject([
+                        'application/json' => [
+                            'schema' => [
+                                '$ref' => '#/components/schemas/Credentials'
+                            ]
+                        ]
+                    ])
+                ),
+                responses: [
+                    '200' => [
+                        'description' => 'Token JWT',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    '$ref' => '#/components/schemas/Token'
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            )
+        );
+
         return $openApi;
     }
 }
