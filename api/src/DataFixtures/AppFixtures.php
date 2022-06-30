@@ -10,12 +10,17 @@ use App\Entity\TypeAccommodation;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\User;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ManagerRegistry;
 
 class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
+    
         // creation de 3 USERS
+        $collection_user = [];
         for ($i = 0; $i < 3; $i++) {
             $user = new User();
             $user->setEmail('user' . $i . '@gmail.com');
@@ -26,7 +31,40 @@ class AppFixtures extends Fixture
             $user->setPhone('06242545649' . $i);
             $user->setRoles(['ROLE_ADMIN']);
             $manager->persist($user);
+            array_push($collection_user, $user);
         }
+
+        // creation de type d'hébergements
+        $type_accommodation_tab = ["cabane", "tente", "roulotte", "bulle", "dôme", "yourte", "tipi", "nid"];
+        $collection_type_accommodation = [];
+        for ($i = 0; $i < count($type_accommodation_tab); $i++) {
+            $type_accommodation = new TypeAccommodation();
+            $type_accommodation->setName($type_accommodation_tab[$i]);
+            $manager->persist($type_accommodation);
+            array_push($collection_type_accommodation, $type_accommodation);
+        }
+        
+        // ajout d'hebergements
+        for ($i = 0; $i < 50; $i++) {
+            $accomodation = new Accommodation();
+            $randomTypeAccommodation = rand(0, count($collection_type_accommodation)-1);
+            $accomodation->setTypeAccommodation($collection_type_accommodation[$randomTypeAccommodation]);
+            $randomUser = rand(0, count($collection_user)-1);
+            $accomodation->setUser($collection_user[$randomUser]);
+            $accomodation->setName("name acco".$i);
+            $accomodation->setPrice(rand(150,1000));
+            $accomodation->setSurface(rand(50,200));
+            $accomodation->setDescription("description acco".$i);
+            $accomodation->setAddress($i." allé de la cabane".$i);
+            $accomodation->setZipCode("20122");
+            $accomodation->setCity("Cassis");
+            $accomodation->setRegion("ile de france");
+            $accomodation->setNbSleeping(rand(2,8));
+            $accomodation->setCapacityAdult(rand(2,8));
+            $accomodation->setCapacityChild(rand(2,8));
+            $manager->persist($accomodation);
+        }
+
         // creation d'equipements
         $equipment_tab = ["wifi", "TV", "piscine", "lave linge", "sèche linge", "barbecue"];
         for ($i = 0; $i < count($equipment_tab); $i++) {
@@ -48,13 +86,7 @@ class AppFixtures extends Fixture
             $service->setName($service_tab[$i]);
             $manager->persist($service);
         }
-        // creation de type d'hébergements
-        $type_accommodation_tab = ["cabane", "tente", "roulotte", "bulle", "dôme", "yourte", "tipi", "nid"];
-        for ($i = 0; $i < count($type_accommodation_tab); $i++) {
-            $type_accommodation = new TypeAccommodation();
-            $type_accommodation->setName($type_accommodation_tab[$i]);
-            $manager->persist($type_accommodation);
-        }
+
         $manager->flush();
     }
 }
