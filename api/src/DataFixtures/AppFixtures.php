@@ -45,6 +45,7 @@ class AppFixtures extends Fixture
         }
         
         // ajout d'hebergements
+        $collection_accommodation = [];
         for ($i = 0; $i < 50; $i++) {
             $accomodation = new Accommodation();
             $randomTypeAccommodation = rand(0, count($collection_type_accommodation)-1);
@@ -63,6 +64,7 @@ class AppFixtures extends Fixture
             $accomodation->setCapacityAdult(rand(2,8));
             $accomodation->setCapacityChild(rand(2,8));
             $manager->persist($accomodation);
+            array_push($collection_accommodation, $accomodation);
         }
 
         // creation d'equipements
@@ -72,15 +74,20 @@ class AppFixtures extends Fixture
             $equipment->setName($equipment_tab[$i]);
             $manager->persist($equipment);
         }
+
         // creation d'activités
-        $activity_tab = ["randonnées", "karting", "quad", "parapente", "motocross", "musées"];
+        $activity_tab = ["randonnées", "karting", "quad", "parapente", "motocross", "musées", "accrobranches"];
+        $collection_activity = [];
         for ($i = 0; $i < count($activity_tab); $i++) {
             $activity = new Activity();
             $activity->setName($activity_tab[$i]);
             $manager->persist($activity);
+            array_push($collection_activity, $activity);
         }
+        
+
         // creation de services
-        $service_tab = ["petit-déjeuner", "ménage"];
+        $service_tab = ["petit-déjeuner", "ménage", "cuisinier"];
         for ($i = 0; $i < count($service_tab); $i++) {
             $service = new Service();
             $service->setName($service_tab[$i]);
