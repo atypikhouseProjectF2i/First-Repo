@@ -7,48 +7,62 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AccommodationRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read']]
+)]
 class Accommodation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['read'])]
     private $name;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read'])]
     private $price;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read'])]
     private $surface;
 
     #[ORM\Column(type: 'text')]
+    #[Groups(['read'])]
     private $description;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['read'])]
     private $address;
 
     #[ORM\Column(type: 'string', length: 20)]
+    #[Groups(['read'])]
     private $zipCode;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['read'])]
     private $city;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['read'])]
     private $region;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read'])]
     private $nbSleeping;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read'])]
     private $capacityAdult;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read'])]
     private $capacityChild;
 
     #[ORM\ManyToMany(targetEntity: Equipement::class, inversedBy: 'accommodations')]
@@ -61,6 +75,7 @@ class Accommodation
     private $activity;
 
     #[ORM\ManyToOne(targetEntity: TypeAccommodation::class, inversedBy: 'accommodations')]
+    #[Groups(['read'])]
     private $typeAccommodation;
 
     #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: Availablity::class)]
