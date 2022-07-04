@@ -1,9 +1,11 @@
 .footer {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
     background: #155B1D;
-    height: 300px;
+    height: 200px;
+    padding: 30px;
 }
 
 
@@ -17,5 +19,17 @@
         margin-top: 20px;
         color: #FFF;
         text-decoration: none;
+
+        &:hover {
+            font-weight: 700;
+            text-decoration: underline;
+        }
     }
+}
+
+.credit {
+    margin-top: 20px;
+    text-align: center;
+    color: #FFF;
+    width: 100%;
 }

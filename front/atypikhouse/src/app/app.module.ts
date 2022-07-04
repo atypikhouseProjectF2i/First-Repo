@@ -10,6 +10,9 @@ import { ContactComponent } from './contact/contact.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { FooterComponent } from './footer/footer.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AccommodationListComponent } from './accommodation-list/accommodation-list.component';
 
 @NgModule({
   declarations: [
@@ -21,8 +24,14 @@ import { FooterComponent } from './footer/footer.component';
     LoginComponent,
     SignupComponent,
     FooterComponent,
+    AccommodationListComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })
