@@ -19,7 +19,7 @@ class TypeAccommodation
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read'])]
+    #[Groups(['readAccommodation'])]
     private $name;
 
     #[ORM\OneToMany(mappedBy: 'typeAccommodation', targetEntity: Accommodation::class)]

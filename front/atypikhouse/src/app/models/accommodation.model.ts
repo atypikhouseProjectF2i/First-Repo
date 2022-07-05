@@ -1,3 +1,5 @@
+import { typeAccommodation } from './type-accommodation.model';
+
 export class Accommodation {
   id!: number;
   name!: string;
@@ -11,4 +13,5 @@ export class Accommodation {
   nbSleeping!: number;
   capacityAdult!: number;
   capacityChild!: number;
+  typeAccommodation!: typeAccommodation;
 }

@@ -11,71 +11,82 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AccommodationRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['read']]
+    collectionOperations: [
+        "get",
+        "post" => ["security" => "is_granted('ROLE_ADMIN')"],
+    ],
+    itemOperations: [
+        "get" => ['groups' => ['readAccommodation']],
+        "put" => ["security" => "is_granted('ROLE_ADMIN')"],
+    ],
+    normalizationContext: ['groups' => ['readAccommodation']]
 )]
 class Accommodation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read'])]
+    #[Groups(['readAccommodation'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read'])]
+    #[Groups(['readAccommodation'])]
     private $name;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read'])]
+    #[Groups(['readAccommodation'])]
     private $price;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read'])]
+    #[Groups(['readAccommodation'])]
     private $surface;
 
     #[ORM\Column(type: 'text')]
-    #[Groups(['read'])]
+    #[Groups(['readAccommodation'])]
     private $description;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read'])]
+    #[Groups(['readAccommodation'])]
     private $address;
 
     #[ORM\Column(type: 'string', length: 20)]
-    #[Groups(['read'])]
+    #[Groups(['readAccommodation'])]
     private $zipCode;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read'])]
+    #[Groups(['readAccommodation'])]
     private $city;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read'])]
+    #[Groups(['readAccommodation'])]
     private $region;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read'])]
+    #[Groups(['readAccommodation'])]
     private $nbSleeping;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read'])]
+    #[Groups(['readAccommodation'])]
     private $capacityAdult;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read'])]
+    #[Groups(['readAccommodation'])]
     private $capacityChild;
 
     #[ORM\ManyToMany(targetEntity: Equipement::class, inversedBy: 'accommodations')]
+    #[Groups(['readAccommodation'])]
     private $equipement;
 
     #[ORM\ManyToMany(targetEntity: Service::class, inversedBy: 'accommodations')]
+    #[Groups(['readAccommodation'])]
     private $service;
 
     #[ORM\ManyToMany(targetEntity: Activity::class, inversedBy: 'accommodations')]
+    #[Groups(['readAccommodation'])]
     private $activity;
 
     #[ORM\ManyToOne(targetEntity: TypeAccommodation::class, inversedBy: 'accommodations')]
-    #[Groups(['read'])]
+    #[Groups(['readAccommodation'])]
     private $typeAccommodation;
 
     #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: Availablity::class)]

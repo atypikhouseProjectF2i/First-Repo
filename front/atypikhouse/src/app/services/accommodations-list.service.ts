@@ -11,17 +11,11 @@ import { of } from 'rxjs';
 })
 export class AccommodationListService {
   private accommodationUrl = 'http://localhost:8000/api';
+  list!: Accommodation[];
 
   constructor(private http: HttpClient) {}
 
-  getAccommodations(): Observable<Accommodation[]> {
-    return this.http.get<Accommodation[]>(
-      'http://localhost:8000/api/accommodations',
-      {
-        headers: {
-          Accept: 'application/json',
-        },
-      }
-    );
+  getAllAccommodations(): Observable<any> {
+    return this.http.get('http://localhost:8000/api/accommodations');
   }
 }

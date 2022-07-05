@@ -16,9 +16,11 @@ img {
         margin: 0 10px;
         color: #333;
         text-decoration: none;
+        text-decoration: underline 0.15em rgba(0, 0, 0, 0);
+        transition: text-decoration-color 300ms;
 
         &:hover {
-            text-decoration: underline;
+            text-decoration-color: rgba(0, 0, 0, 1);
         }
     }
 
@@ -29,7 +31,7 @@ img {
 
     .active {
         color: #155B1D;
-        text-decoration: underline;
+        text-decoration: underline 0.15em;
         font-weight: 700;
     }
 }

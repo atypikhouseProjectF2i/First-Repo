@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ActivityRepository::class)]
 #[ApiResource()]
@@ -18,6 +19,7 @@ class Activity
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['readAccommodation'])]
     private $name;
 
     #[ORM\ManyToMany(targetEntity: Accommodation::class, mappedBy: 'activity')]

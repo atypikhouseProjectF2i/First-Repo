@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Accommodation } from '../models/accommodation.model';
 import { AccommodationListService } from '../services/accommodations-list.service';
 
@@ -10,9 +10,15 @@ import { AccommodationListService } from '../services/accommodations-list.servic
 })
 export class AccommodationListComponent implements OnInit {
   accommodation$!: Observable<Accommodation[]>;
-  constructor(private accommodationService: AccommodationListService) {}
+  constructor(public accommodationService: AccommodationListService) {}
 
   ngOnInit(): void {
-    this.accommodation$ = this.accommodationService.getAccommodations();
+    this.getData();
+  }
+
+  getData() {
+    this.accommodationService.getAllAccommodations().subscribe((response) => {
+      this.accommodationService.list = response['hydra:member'];
+    });
   }
 }
